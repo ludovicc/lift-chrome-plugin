@@ -4,10 +4,13 @@ onload = function() {
   var hosts = document.getElementById("hosts");
   var port = document.getElementById("port");
   var directory = document.getElementById("directory");
+  var staticDirectory = document.getElementById("static-directory");
+  var htmlFileExtensions = document.getElementById("html-file-extensions");
 
   var socket = chrome.experimental.socket || chrome.socket;
   var socketInfo;
   var filesMap = {};
+  var staticFilesMap = {};
 
   var stringToUint8Array = function(string) {
     var buffer = new ArrayBuffer(string.length);
@@ -60,6 +63,9 @@ onload = function() {
 
   var write200Response = function(socketId, file, keepAlive) {
     var contentType = (file.type === "") ? "text/plain" : file.type;
+    if (file.name.lastIndexOf('.t') + 2 == file.name.length) {
+      contentType = "text/html";
+    }
     var contentLength = file.size;
     var header = stringToUint8Array("HTTP/1.0 200 OK\nContent-length: " + file.size + "\nContent-type:" + contentType + ( keepAlive ? "\nConnection: keep-alive" : "") + "\n\n");
     var outputBuffer = new ArrayBuffer(header.byteLength + file.size);
@@ -70,6 +76,7 @@ onload = function() {
     fileReader.onload = function(e) {
        view.set(new Uint8Array(e.target.result), header.byteLength); 
        socket.write(socketId, outputBuffer, function(writeInfo) {
+         console.log("> ", file.webkitRelativePath);
          console.log("WRITE", writeInfo);
          if (keepAlive) {
            readFromSocket(socketId);
@@ -95,6 +102,7 @@ onload = function() {
       // Parse the request.
       var data = arrayBufferToString(readInfo.data);
       if(data.indexOf("GET ") == 0) {
+        console.log("< ", data);
         var keepAlive = false;
         if (data.indexOf("Connection: keep-alive") != -1) {
           keepAlive = true;
@@ -109,7 +117,10 @@ onload = function() {
         if (q != -1) {
           uri = uri.substring(0, q);
         }
-        var file = filesMap[uri];
+        var file = filesMap[uri] || staticFilesMap[uri];
+        if(!!file == false) {
+          file = staticFilesMap[uri];
+        }
         if(!!file == false) { 
           console.warn("File does not exist..." + uri);
           writeErrorResponse(socketId, 404, keepAlive);
@@ -141,6 +152,22 @@ onload = function() {
     directory.disabled = true;
   };
 
+  staticDirectory.onchange = function(e) {
+    if (socketInfo) socket.destroy(socketInfo.socketId);
+
+    var files = e.target.files;
+
+    for(var i = 0; i < files.length; i++) {
+      //remove the first first directory
+      var path = files[i].webkitRelativePath;
+      staticFilesMap[path.substr(path.indexOf("/"))] = files[i];
+    }
+
+    start.disabled = false;
+    stop.disabled = true;
+    staticDirectory.disabled = true;
+  };
+
   start.onclick = function() {
     socket.create("tcp", {}, function(_socketInfo) {
       socketInfo = _socketInfo;
@@ -151,12 +178,14 @@ onload = function() {
     });
 
     directory.disabled = true;
+    staticDirectory.disabled = true;
     stop.disabled = false;
     start.disabled = true;
   };
 
   stop.onclick = function() {
     directory.disabled = false;
+    staticDirectory.disabled = false;
     stop.disabled = true;
     start.disabled = false;
     socket.destroy(socketInfo.socketId);

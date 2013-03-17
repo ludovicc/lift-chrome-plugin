@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="styles/bootstrap.css">
         <link rel="stylesheet" href="styles/main.css">
         <!-- endbuild -->
+        <script src="node_modules/cheerio/lib/cheerio.js"></script>
         <script src="index.js"></script>
         <style>
           input[type="file"]::-webkit-file-upload-button {
@@ -64,11 +65,15 @@
         <h1>HTTP Webserver</h1>
          <p>Serving you locally</p>
          <p>
+           Main directory:
            <input type="file" webkitdirectory id="directory"/><br />
+           Directory for static resources (optional):
+           <input type="file" webkitdirectory id="static-directory"/><br />
            <select id="hosts">
              <option value="127.0.0.1">lo - 127.0.0.1</option> 
            </select>
            <input type="text" id="port" value="8080"/><br />
+           <input type="text" id="html-file-extensions" value=".html .t"/><br />
            <button id="start" class="btn btn-primary btn-large" disabled>Start</button>
            <button id="stop" class="btn btn-warning btn-large"  disabled>Stop</button>
          </p>

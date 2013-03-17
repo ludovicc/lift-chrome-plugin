@@ -1,3 +1,4 @@
 # Grunt and npm commands I used for the setup
 npm install grunt-crx
+npm install
 

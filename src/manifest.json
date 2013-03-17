@@ -1,5 +1,5 @@
 {
-  "name": "Lift template server",
+  "name": "Chrome plugin for Lift",
   "version": "1",
   "manifest_version": 2,
   "description": "An embedded HTTP server designed for helping designers work with Lift templates",
