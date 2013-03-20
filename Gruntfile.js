@@ -21,7 +21,26 @@ module.exports = function(grunt) {
     };
 
 	grunt.initConfig({
+		
+      // specify an alternate install location for Bower
+      bower: {
+        dir: 'src/vendor'
+      },
+		
 	  manifest: grunt.file.readJSON('src/manifest.json'),
+	  
+      jshint: {
+		options: {
+			jshintrc: '.jshintrc'
+		},
+        build : ['Gruntfile.js'],
+		app: [
+			'src/{,*/}*.js',
+			'!src/vendor/*',
+			'test/spec/{,*/}*.js'
+		]
+	  },
+	  
 	  crx: {
 	    staging: {
 	      "src": "src/",
@@ -43,7 +62,19 @@ module.exports = function(grunt) {
 	        "maxBuffer": 3000 * 1024 //build extension with a weight up to 3MB
 	      }
 	    }
+	  },
+	  
+      /** WATCH:
+       *  provide a fast development watch and a slower full everything watch.
+       */
+      watch = {
+		full : {
+			files : ['Gruntfile.js', 'src/*.json',
+					'src/*.js'],
+			tasks : ['build']
+	    }
 	  }
+	  
 	});
 }
 
