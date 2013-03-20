@@ -2,9 +2,10 @@
 sudo npm install -g grunt
 sudo npm install -g grunt-init
 sudo npm install -g grunt-cli
-git clone git@github.com:bocoup/grunt-init-chromeapp.git ~/.grunt-init/chromeapp
+sudo npm install -g node-inspector
+#git clone git@github.com:bocoup/grunt-init-chromeapp.git ~/.grunt-init/chromeapp
 
-grunt-init chromeapp
-npm install grunt-crx
+#grunt-init chromeapp
+#npm install grunt-crx
 npm install
 

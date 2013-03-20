@@ -1,8 +1,31 @@
 {
-  "name": "Chrome plugin for Lift",
+  "name": "Lift template developer tool",
   "version": "1",
   "manifest_version": 2,
-  "description": "An embedded HTTP server designed for helping designers work with Lift templates",
+  "description": "Makes working with HTML pages turned Lift templates a breeze",
+  
+  "update_url": "https://github.com/ludovicc/lift-chrome-plugin/master/autoupdate.xml",
+
+   "content_scripts": [
+      {
+         "matches": ["file://*/*"],
+
+         "run_at": "document_end",
+
+         "js": ["deps/underscore.js",
+                "deps/jquery-1.7.2.min.js",
+                "deps/jquery-ui-1.8.18.min.js",
+                "deps/handlebars-1.0.0.js",
+                "src/pt_tweak_main.js",
+                "src/rearrange_panels.js",
+                "src/epic_hook.js"
+               ],
+
+         "css": ["css/ptt_style.css"]
+      }
+   ],
+
+  
   "icons": {
     "16": "icon-16.png",
     "128": "icon-128.png"

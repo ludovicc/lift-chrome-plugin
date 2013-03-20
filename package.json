@@ -1,13 +1,22 @@
 {
-  "name": "chrome-plugin-for-lift",
+  "name": "lift-chrome-plugin",
+  "title": "Lift template developer tools",
+  "description": "Makes working with HTML pages turned Lift templates a breeze",
   "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ludovicc/lift-chrome-plugin"
+  },
   "dependencies": {
     "cheerio": "~0.10.8"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.6",
     "grunt-crx": "~0.2.0",
-    "grunt-contrib-jshint": "~0.1.1",
-    "grunt-contrib-nodeunit": "~0.1.2"
+    "grunt-contrib-jshint": "~0.2.0",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-nodeunit": "~0.1.2",
+    "node-inspector": "~0.2.0beta3"
   }
 }
