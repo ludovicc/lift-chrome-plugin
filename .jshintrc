@@ -1,15 +1,33 @@
 {
+  "bitwise": true,
   "curly": true,
   "eqeqeq": true,
+  "forin": true,
   "immed": true,
   "latedef": true,
   "newcap": true,
+  "strict": false,
   "noarg": true,
+  "noempty": true,
+  "nonew": true,
+  "regexp": true,
   "sub": true,
   "undef": true,
   "unused": true,
-  "boss": true,
-  "eqnull": true,
-  "node": true,
-  "es5": true
+  "maxlen": 110,
+  
+  "maxparams": 8,
+  "maxdepth": 4,
+  "maxstatements": 100,
+  
+  "browser": true,
+  "devel": true,
+
+  "globals": {
+    "_": false,
+    "$": false,
+    "j": false,
+    "chrome": false,
+    "Epic": false
+  }
 }
