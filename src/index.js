@@ -76,22 +76,37 @@ onload = function() {
     var view = new Uint8Array(outputBuffer);
     view.set(header, 0);
 
-    var fileReader = new FileReader();
-    fileReader.onload = function(e) {
-       view.set(new Uint8Array(e.target.result), header.byteLength); 
-       socket.write(socketId, outputBuffer, function(writeInfo) {
-         console.log("> ", file.webkitRelativePath);
-         console.log("WRITE", writeInfo);
-         if (keepAlive) {
-           readFromSocket(socketId);
-         } else {
-           socket.destroy(socketId);
-           socket.accept(socketInfo.socketId, onAccept);
-         }
-      });
+    if (contentType == "text/html") {
+      fileReader.onload = function(e) {
+    	var html = e.target.results;  
+    	var $ = cheerio.load(html);
+    	var content = $('* [data-lift^="surround"]');
+    	var contentValue = content.attributes['data-lift'].value;
+    	var contentSurround = content.attributes['data-lift'].value.split('with=');
+    	var contentSurroundWith = contentValue.split('with=')[1].split(';')[0]
+    	var contentSurroundAt = contentValue.split('at=')[1].split(';')[0]
+
+      };
+      fileReader.readAsText(file);
+    	
+    } else {
+      var fileReader = new FileReader();
+      fileReader.onload = function(e) {
+         view.set(new Uint8Array(e.target.result), header.byteLength); 
+         socket.write(socketId, outputBuffer, function(writeInfo) {
+           console.log("> ", file.webkitRelativePath);
+           console.log("WRITE", writeInfo);
+           if (keepAlive) {
+             readFromSocket(socketId);
+           } else {
+             socket.destroy(socketId);
+             socket.accept(socketInfo.socketId, onAccept);
+           }
+        });
+      };
+      fileReader.readAsArrayBuffer(file);
     };
 
-    fileReader.readAsArrayBuffer(file);
   };
 
   var onAccept = function(acceptInfo) {
@@ -116,7 +131,7 @@ onload = function() {
         var uriEnd =  data.indexOf(" ", 4);
         if(uriEnd < 0) { /* throw a wobbler */ return; }
         var uri = data.substring(4, uriEnd);
-        // strip qyery string
+        // strip query string
         var q = uri.indexOf("?");
         if (q !== -1) {
           uri = uri.substring(0, q);
@@ -148,7 +163,7 @@ onload = function() {
     var files = e.target.files;
 
     for(var i = 0; i < files.length; i++) {
-      //remove the first first directory
+      //remove the first part of directory
       var path = files[i].webkitRelativePath;
       filesMap[path.substr(path.indexOf("/"))] = files[i];
     }
@@ -166,7 +181,7 @@ onload = function() {
     var files = e.target.files;
 
     for(var i = 0; i < files.length; i++) {
-      //remove the first first directory
+      //remove the first part of directory
       var path = files[i].webkitRelativePath;
       staticFilesMap[path.substr(path.indexOf("/"))] = files[i];
     }
