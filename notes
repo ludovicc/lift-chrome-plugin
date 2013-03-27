@@ -1,0 +1,7 @@
+
+content = $('* [data-lift^="surround"]')
+contentSurround = content.attributes['data-lift'].value.split('=')
+// Assume "surround?with=gan55u9en7;at=content"
+contentSurroundWith = contentSurround[1].split(';')[0]
+contentSurroundAt = contentSurround[2].split(';')[0]
+
